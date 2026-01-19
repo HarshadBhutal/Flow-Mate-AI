@@ -1,0 +1,19 @@
+# Python bytecode (compiled files)
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual Environment
+.venv/
+venv/
+ENV/
+
+# Environment variables (Sensitive data like API keys)
+.env
+
+# SQLite Database
+*.db
+*.sqlite3
+
+# IDE Settings (VS Code)
+.vscode/
