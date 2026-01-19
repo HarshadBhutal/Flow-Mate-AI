@@ -45,7 +45,7 @@ def Create_Todo(task: Task):
 
 
 @mcp.tool()
-def add_task(id: int, task: Task):
+def add_task(user_id: int, task: Task):
     """
     Appends a new task to an existing user's to-do list based on their ID.
 
@@ -57,7 +57,7 @@ def add_task(id: int, task: Task):
         str: A success message if the task is added, or an error message if the ID is not found.
     """
     with Session(engine) as session:
-        todo = session.get(TO_DO, id)
+        todo = session.get(TO_DO, user_id)
         if todo:
             current_tasks = list(todo.Task_To_Complete)
             current_tasks.append(task.item)
@@ -92,6 +92,28 @@ def get_user_tasks(user_id: int):
     return {"tasks": todo.Task_To_Complete}
 
 
-@app.delete("/task_done/{id}")
-def Task_Done(id:int):
-    pass
+@mcp.tool()
+def Task_Done(user_id:int,Task_name:str):
+    """
+    Delete the task from the todo list which is completed. 
+    
+    Args:
+         user_id:The unique identifier of the user whose tasks are being requested.
+         Task_name:name of the task in the list.
+
+    Returns: 
+            str:message if the task is deleted from the to do list
+        
+    """
+    with Session(engine) as session:
+        todo = session.get(TO_DO, user_id)
+        if todo:
+            current_tasks=list(todo.Task_To_Complete)
+            current_tasks.remove(Task_name)
+            todo.Task_To_Complete=current_tasks
+            session.add(todo)
+            message="Task is deleted from the list"
+        else:
+            message="there is not task with the name"
+        session.commit()
+    return message    
